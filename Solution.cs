@@ -1,5 +1,6 @@
 
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 class Solution
 {
@@ -69,11 +70,10 @@ class Solution
                     join r in db.rooms on b.RoomNumber equals r.Number
                     join rt in db.roomType on r.RoomTypeId equals rt.Id
                     group b by b.GuestID into grp
-                    select new {GuestId = grp.Key, Sum = grp.Sum(_ => _.room.roomType.Price)};
-        foreach(var r in result)
-        {
-            System.Console.WriteLine($"{r.GuestId}, {r.Sum}");
-        }
+                    select new {id = grp.Key, Sum = grp.Sum(_ => _.Nights * _.room.roomType.Price)};
+
+        var top5 = result.OrderByDescending(_ => _.Sum).Take(5).ToList();
+        top5.ForEach(_ => System.Console.WriteLine($"{_.id}, {_.Sum}"));
     }
 
     public static void q6Solution(HotelContext db, DateOnly date)
