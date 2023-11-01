@@ -25,10 +25,10 @@ class Solution
                         join gu in db.guests on b.GuestID equals gu.Id
                         orderby gu.Id
                         where b.BookingDate == date
-                        select new {Guest = gu.Name, Room = b.RoomNumber};
+                        select new {Id = gu.Id ,Guest = gu.Name, Room = b.RoomNumber};
         foreach(var b in results)
         {
-            System.Console.WriteLine($"{b.Guest}, {b.Room}");
+            System.Console.WriteLine($"{b.Id}, {b.Guest}, {b.Room}");
         }
 
 
@@ -40,6 +40,7 @@ class Solution
         var results = from b in db.bookings
                         group b by b.BookingDate into grp
                         where grp.Count() > 1
+                        orderby grp.Key
                         select new {Date = grp.Key, Count = grp.Count()};
         foreach(var b in results)
         {
