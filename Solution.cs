@@ -37,7 +37,14 @@ class Solution
     public static void q3Solution(HotelContext db)
     {
         // Exercise 3: List down number of bookings per day where there are more than 1 bookings
-
+        var results = from b in db.bookings
+                        group b by b.BookingDate into grp
+                        where grp.Count() > 1
+                        select new {Date = grp.Key, Count = grp.Count()};
+        foreach(var b in results)
+        {
+            System.Console.WriteLine($"{b.Date}, {b.Count}");
+        }
     }
 
     public static void q4Solution(HotelContext db, DateOnly date)
