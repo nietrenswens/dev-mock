@@ -51,7 +51,13 @@ class Solution
     public static void q4Solution(HotelContext db, DateOnly date)
     {
         // Exercise 4. List the rooms that are free on '2022-01-13'.
-
+        var roomnumbers = db.rooms.OrderBy(room => room.Number).Select(_ => _.Number).ToList();
+        var reservedroomnumbers = db.bookings.Where(_ => _.BookingDate == date).Select(_ => _.RoomNumber).ToList();
+        var freerooms = roomnumbers.Except(reservedroomnumbers);
+        foreach(var roomnum in freerooms)
+        {
+            System.Console.WriteLine(roomnum);
+        }
     }
 
     public static void q5Solution(HotelContext db)
