@@ -65,7 +65,15 @@ class Solution
         // Exercise: 5:  List down top 5 valued customers, with their id and spending 
         // HINT: a valued customer is the on with max amount spent, 
         // amount = Nights * Price for each booking of a customer
-
+        var result = from b in db.bookings
+                    join r in db.rooms on b.RoomNumber equals r.Number
+                    join rt in db.roomType on r.RoomTypeId equals rt.Id
+                    group b by b.GuestID into grp
+                    select new {GuestId = grp.Key, Sum = grp.Sum(_ => _.room.roomType.Price)};
+        foreach(var r in result)
+        {
+            System.Console.WriteLine($"{r.GuestId}, {r.Sum}");
+        }
     }
 
     public static void q6Solution(HotelContext db, DateOnly date)
